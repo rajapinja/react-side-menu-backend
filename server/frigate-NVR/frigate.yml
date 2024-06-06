@@ -1,0 +1,50 @@
+# Frigate Configuration
+config:
+  base_path: /config
+  timezone: America/New_York
+
+# Camera Definitions
+cameras:
+  - name: camera1
+    ffmpeg_input: 'rtsp://username:password@camera1-ip-address:554/your-stream-path'
+    width: 1920
+    height: 1080
+    fps: 15
+    detector:
+      type: contour
+      mask: /config/masks/camera1.jpg
+      minimum_area: 200
+
+  - name: camera2
+    ffmpeg_input: 'rtsp://username:password@camera2-ip-address:554/your-stream-path'
+    width: 1920
+    height: 1080
+    fps: 15
+    detector:
+      type: contour
+      mask: /config/masks/camera2.jpg
+      minimum_area: 200
+
+# Recordings Configuration
+record:
+  # The directory where recordings will be stored
+  directory: /media/frigate/recordings
+
+  # The number of days to keep recordings
+  max_seconds: 86400
+
+  # The minimum disk space required for recordings (in GB)
+  min_space: 5
+
+# Detection and Notification Configuration
+mqtt:
+  host: mqtt-server-host
+  port: 1883
+  topic_prefix: frigate
+
+alerts:
+  notify:
+    mqtt:
+      enabled: true
+      face_recognition: true
+      object: true

@@ -1,0 +1,14 @@
+{
+    "patterns": [
+      { "pattern": "hello", "responses": ["Hello!", "Hi there!"] },
+      { "pattern": "how are you", "responses": ["I'm doing well, thank you!", "I'm fine, thanks for asking."] },
+      { "pattern": "name", "responses": ["My name is Chatbot.", "You can call me Chatbot."] },
+      { "pattern": "age", "responses": ["I'm just a computer program, so I don't have an age."] },
+      { "pattern": "salary", "responses": ["Your salary for this month is $5000."] },
+      { "pattern": "update", "responses": ["Please provide your updated personal information."] },
+      { "pattern": "leave", "responses": ["Please submit a leave request through the HR portal."] },
+      { "pattern": "feedback", "responses": ["Thank you for your feedback! Your opinion is valuable to us."] },
+      { "pattern": "survey", "responses": ["Sure, I can help you with the survey. What is your feedback?"] }
+    ]
+  }
+  

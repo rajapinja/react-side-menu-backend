@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Video Call</title>
+</head>
+<body>
+    <h1>Video Call</h1>
+    <img id="video" src="{{ url_for('video_feed') }}" alt="Video Feed">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+    <script>
+        const socket = io.connect('http://' + document.domain + ':' + location.port + '/video');
+
+        socket.on('video_frame', function(data) {
+            const video = document.getElementById('video');
+            video.src = 'data:image/jpeg;base64,' + data.frame;
+        });
+    </script>
+</body>
+</html>

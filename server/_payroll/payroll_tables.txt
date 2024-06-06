@@ -1,0 +1,209 @@
+CREATE TABLE payroll.Employee (
+    employee_id INT PRIMARY KEY AUTO_INCREMENT,
+    first_name VARCHAR(50),
+    last_name VARCHAR(50),
+    email VARCHAR(100),
+    phone_number VARCHAR(20),
+    hire_date DATE,
+    department_id INT,
+    position VARCHAR(50),
+    salary DECIMAL(10, 2)
+);
+
+ALTER TABLE payroll.Employee
+CHANGE department department_id INT;
+
+INSERT INTO payroll.Employee (employee_id, first_name, last_name, email, department_id, salary) VALUES
+(1, 'John', 'Doe', 'john.doe@example.com', 101, 50000),
+(2, 'Jane', 'Smith', 'jane.smith@example.com', 102, 60000),
+(3, 'Michael', 'Johnson', 'michael.johnson@example.com', 101, 55000),
+(4, 'Emily', 'Brown', 'emily.brown@example.com', 103, 52000);
+
+
+CREATE TABLE payroll.Payroll (
+    payroll_id INT PRIMARY KEY AUTO_INCREMENT,
+    employee_id INT,
+    pay_period_start_date DATE,
+    pay_period_end_date DATE,
+    hours_worked DECIMAL(8, 2),
+    gross_pay DECIMAL(10, 2),
+    taxes DECIMAL(10, 2),
+    deductions DECIMAL(10, 2),
+    net_pay DECIMAL(10, 2),
+    FOREIGN KEY (employee_id) REFERENCES Employee(employee_id)
+);
+
+INSERT INTO payroll.Payroll (employee_id, pay_period_start_date, pay_period_end_date, hours_worked, gross_pay, taxes, deductions, net_pay)
+VALUES
+(1, '2024-01-01', '2024-01-15', 80, 2000.00, 300.00, 100.00, 1600.00),
+(2, '2024-01-01', '2024-01-15', 75, 1800.00, 270.00, 90.00, 1440.00),
+(3, '2024-01-01', '2024-01-15', 85, 2200.00, 330.00, 110.00, 1760.00);
+
+
+CREATE TABLE payroll.Salary (
+    salary_id INT PRIMARY KEY AUTO_INCREMENT,
+    employee_id INT,
+    start_date DATE,
+    end_date DATE,
+    salary_amount DECIMAL(10, 2),
+    FOREIGN KEY (employee_id) REFERENCES Employee(employee_id)
+);
+
+INSERT INTO payroll.Salary (employee_id, start_date, end_date, salary_amount)
+VALUES
+(1, '2024-01-01', '2024-12-31', 50000.00),
+(2, '2024-01-01', '2024-12-31', 48000.00),
+(3, '2024-01-01', '2024-12-31', 52000.00);
+
+
+CREATE TABLE payroll.TimeTracking (
+    time_tracking_id INT PRIMARY KEY AUTO_INCREMENT,
+    employee_id INT,
+    date DATE,
+    clock_in_time TIME,
+    clock_out_time TIME,
+    hours_worked DECIMAL(8, 2),
+    FOREIGN KEY (employee_id) REFERENCES Employee(employee_id)
+);
+
+INSERT INTO payroll.TimeTracking (employee_id, date, clock_in_time, clock_out_time, hours_worked)
+VALUES
+(1, '2024-01-01', '08:00:00', '17:00:00', 8),
+(1, '2024-01-02', '08:15:00', '17:15:00', 8),
+(2, '2024-01-01', '09:00:00', '18:00:00', 8);
+
+
+CREATE TABLE payroll.Tax (
+    tax_id INT PRIMARY KEY AUTO_INCREMENT,
+    tax_bracket VARCHAR(50),
+    tax_rate DECIMAL(5, 2)
+);
+
+INSERT INTO payroll.Tax (tax_bracket, tax_rate)
+VALUES
+('0-10000', 10),
+('10001-50000', 15),
+('50001-100000', 20);
+
+
+CREATE TABLE payroll.Deduction (
+    deduction_id INT PRIMARY KEY AUTO_INCREMENT,
+    deduction_name VARCHAR(100),
+    deduction_type VARCHAR(50),
+    deduction_amount DECIMAL(10, 2)
+);
+
+INSERT INTO payroll.Deduction (deduction_name, deduction_type, deduction_amount)
+VALUES
+('Health Insurance', 'Insurance', 100.00),
+('401(k) Contribution', 'Retirement', 150.00),
+('Union Dues', 'Union', 50.00);
+
+
+CREATE TABLE payroll.Department (
+    department_id INT PRIMARY KEY AUTO_INCREMENT,
+    department_name VARCHAR(50),
+    manager_id INT,
+    FOREIGN KEY (manager_id) REFERENCES Employee(employee_id)
+);
+
+INSERT INTO payroll.Department (department_id, department_name) VALUES
+(101, 'Engineering'),
+(102, 'Marketing'),
+(103, 'Human Resources');
+
+
+CREATE TABLE payroll.Position (
+    position_id INT PRIMARY KEY AUTO_INCREMENT,
+    position_title VARCHAR(100),
+    position_description VARCHAR(255),
+    salary_grade VARCHAR(50)
+);
+
+INSERT INTO payroll.Position (position_title, position_description, salary_grade)
+VALUES
+('Software Engineer', 'Responsible for developing and maintaining software applications', 'Grade 8'),
+('Marketing Manager', 'Responsible for creating and implementing marketing strategies', 'Grade 10'),
+('Human Resources Specialist', 'Responsible for recruitment, training, and employee relations', 'Grade 9');
+
+CREATE TABLE payroll.Country (
+    country_id INT PRIMARY KEY AUTO_INCREMENT,
+    country_name VARCHAR(100) NOT NULL,
+    continent VARCHAR(50),
+    population INT,
+    capital VARCHAR(100),
+    currency VARCHAR(50),
+    country_code VARCHAR(3),
+    language VARCHAR(50)    
+);
+
+INSERT INTO payroll.Country (country_name, continent, population, capital, currency, country_code,language )
+VALUES 
+    ('United States', 'North America', 331449281, 'Washington, D.C.', 'USD', 'USA','English'),
+    ('United Kingdom', 'Europe', 67886011, 'London', 'GBP','UK', 'English'),
+    ('France', 'Europe', 65273511, 'Paris', 'EUR', 'FRA', 'French'),
+    ('Germany', 'Europe', 83783942, 'Berlin', 'EUR','GER', 'German' ),
+    ('Japan', 'Asia', 126476461, 'Tokyo', 'JPY', 'JAP','Japanese'),
+    ('Australia', 'Oceania', 25499884, 'Canberra', 'AUD', 'AUS','English'),
+    ('Brazil', 'South America', 212559417, 'Brasília', 'BRL', 'BRA','Portuguese');
+
+
+ALTER TABLE payroll.Country
+ADD country_code VARCHAR(3);
+
+CREATE INDEX idx_country_code ON payroll.Country (country_code);
+
+SELECT DISTINCT country_code FROM payroll.country;
+
+DELETE FROM payroll.Country
+WHERE country_code IS NULL;
+
+SELECT DISTINCT country_code FROM payroll.Country;
+
+
+-- Drop the existing TaxSlabs table if it exists
+DROP TABLE IF EXISTS payroll.TaxSlabs;
+
+-- Create the TaxSlabs table with the desired structure and foreign key constraint
+CREATE TABLE payroll.TaxSlabs (
+    tax_slab_id INT PRIMARY KEY AUTO_INCREMENT,
+    country_code VARCHAR(3),
+    tax_year INT,
+    slab_start DECIMAL(10, 2),
+    slab_end DECIMAL(10, 2),
+    tax_rate DECIMAL(5, 2),
+    FOREIGN KEY (country_code) REFERENCES payroll.Country(country_code)
+);
+
+-- Insert sample data into the newly created TaxSlabs table
+INSERT INTO payroll.TaxSlabs(country_code, tax_year, slab_start, slab_end, tax_rate) VALUES
+('USA', 2023, 0, 10000, 10),
+('USA', 2023, 10001, 50000, 15),
+('USA', 2023, 50001, 100000, 20),
+('UK', 2023, 0, 50000, 10),
+('UK', 2023, 50001, 150000, 20),
+('UK', 2023, 150001, 1000000, 30);
+
+
+drop table payroll.TaxRegulations;
+CREATE TABLE payroll.TaxRegulations (
+    tax_regulation_id INT PRIMARY KEY AUTO_INCREMENT,
+    country_code VARCHAR(3),
+    tax_year INT,
+    tax_bracket VARCHAR(100),
+    taxable_income_start DECIMAL(10, 2),
+    taxable_income_end DECIMAL(10, 2),
+    tax_rate DECIMAL(5, 2),
+    FOREIGN KEY (country_code) REFERENCES Country(country_code)
+);
+
+
+INSERT INTO payroll.TaxRegulations (country_code, tax_year, tax_bracket, taxable_income_start, taxable_income_end, tax_rate) VALUES
+('USA', 2023, 'Bracket 1', 0, 10000, 10),
+('USA', 2023, 'Bracket 2', 10001, 50000, 15),
+('USA', 2023, 'Bracket 3', 50001, 100000, 20),
+('UK', 2023, 'Basic Rate', 0, 50000, 10),
+('UK', 2023, 'Higher Rate', 50001, 150000, 20),
+('UK', 2023, 'Additional Rate', 150001, NULL, 30);
+
+

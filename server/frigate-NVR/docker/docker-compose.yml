@@ -1,0 +1,22 @@
+version: '3'
+services:
+  nodejs-app:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    image: your-nodejs-app-image-name
+    container_name: nodejs-app
+    environment:
+      - PORT=3000
+    ports:
+      - "3000:3000"  # Map the container's port to the host
+
+  frigate-nvr:
+    image: blakeblackshear/frigate:latest
+    container_name: frigate-nvr
+    environment:
+      - FRIGATE_CONFIG=/config/frigate.yml
+    volumes:
+      - ./frigate-config:/config  # Mount your Frigate configuration files
+    ports:
+      - "5000:5000"  # Map the container's port to the host

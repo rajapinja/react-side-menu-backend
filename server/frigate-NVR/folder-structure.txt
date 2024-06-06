@@ -1,0 +1,10 @@
+your-project/
+├── docker/
+│   ├── Dockerfile
+│   └── docker-compose.yml
+├── src/
+│   ├── index.js
+│   └── frigate.js
+├── .env
+├── package.json
+└── README.md
